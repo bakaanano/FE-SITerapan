@@ -1,8 +1,12 @@
 import { useState } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
 import LoginModal from './components/LoginModal'
+import Register from './pages/Register'
+import Catalog from './pages/Catalog'
+import About from './pages/About'
 
-function App() {
+function AppContent() {
   const [searchQuery, setSearchQuery] = useState('')
   const [isLoginOpen, setIsLoginOpen] = useState(false)
 
@@ -21,12 +25,11 @@ function App() {
       {/* Header */}
       <header className="header">
         <div className="header-container">
-          <div className="logo">Logo</div>
+          <a href="/" className="logo" style={{ textDecoration: 'none', color: '#0056ff', cursor: 'pointer' }}>Logo</a>
           <nav className="nav-menu">
-            <a href="#beranda" className="nav-link">Beranda</a>
-            <a href="#katalog" className="nav-link">Katalog</a>
-            <a href="#layanan" className="nav-link">Layanan</a>
-            <a href="#tentang" className="nav-link">Tentang</a>
+            <a href="/" className="nav-link">Beranda</a>
+            <a href="/catalog" className="nav-link">Katalog</a>
+            <a href="/about" className="nav-link">Tentang</a>
           </nav>
           <button className="login-btn" onClick={() => setIsLoginOpen(true)}>Masuk</button>
         </div>
@@ -42,10 +45,10 @@ function App() {
           
           <div className="search-container">
             <div className="search-box">
-              <svg className="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              {/* <svg className="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <circle cx="8" cy="8" r="6" stroke="white" strokeWidth="2"/>
                 <line x1="12" y1="12" x2="18" y2="18" stroke="white" strokeWidth="2"/>
-              </svg>
+              </svg> */}
               <input
                 type="text"
                 placeholder="Cari judul buku, penulis, kategori"
@@ -195,7 +198,6 @@ function App() {
               <ul className="footer-links">
                 <li><a href="#beranda">Beranda</a></li>
                 <li><a href="#katalog">Katalog</a></li>
-                <li><a href="#layanan">Layanan</a></li>
                 <li><a href="#tentang">Tentang</a></li>
               </ul>
             </div>
@@ -234,4 +236,15 @@ function App() {
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<AppContent />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/catalog" element={<Catalog />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </Router>
+  )
+}

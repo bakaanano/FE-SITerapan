@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import '../styles/LoginModal.css'
 
 export default function LoginModal({ isOpen, onClose }) {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -136,7 +138,7 @@ export default function LoginModal({ isOpen, onClose }) {
 
           {/* Sign Up Link */}
           <div className="login-modal-signup">
-            <p>Belum punya akun? <a href="#signup" className="login-modal-signup-link">Daftar Sekarang</a></p>
+            <p>Belum punya akun? <a href="#" onClick={(e) => { e.preventDefault(); onClose(); navigate('/register'); }} className="login-modal-signup-link">Daftar Sekarang</a></p>
           </div>
         </div>
       </div>
