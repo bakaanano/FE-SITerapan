@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import './App.css'
+import LoginModal from './components/LoginModal'
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('')
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
 
   const handleSearch = () => {
     console.log('Search for:', searchQuery)
@@ -26,7 +28,7 @@ function App() {
             <a href="#layanan" className="nav-link">Layanan</a>
             <a href="#tentang" className="nav-link">Tentang</a>
           </nav>
-          <button className="login-btn">Masuk</button>
+          <button className="login-btn" onClick={() => setIsLoginOpen(true)}>Masuk</button>
         </div>
       </header>
 
@@ -225,6 +227,9 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* Login Modal */}
+      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </>
   )
 }
