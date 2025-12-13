@@ -88,14 +88,14 @@ export default function About() {
         <section className="vision-section">
           <div className="vision-content">
             <div className="vision-image">
-              <img src="/bookshelf.jpg" alt="Bookshelf" />
+              <img src={imageMap['rakbuku.jpg']} alt="RakBuku" />
             </div>
             <div className="vision-text">
               <h2 className="vision-title">Visi Kami</h2>
               <p className="vision-desc">
                 Pustaka Digital hadir dengan misi untuk memberikan kemudahan dalam akses literasi bagi seluruh lapisan masyarakat Indonesia. Kami percaya bahwa literasi adalah kunci kemajuan bangsa. Dengan memadukan teknologi modern dan koleksi buku berkualitas, kami berupaya menjadikan ekosistem belajar yang menyenangkan dan mudah diakses.
               </p>
-              <div className="vision-stats">
+              {/* <div className="vision-stats">
                 <div className="stat-item">
                   <div className="stat-label">5rb+</div>
                   <div className="stat-name">Koleksi Buku</div>
@@ -104,7 +104,7 @@ export default function About() {
                   <div className="stat-label">2rb+</div>
                   <div className="stat-name">Pengunjung</div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
@@ -170,7 +170,7 @@ export default function About() {
           </div>
         </div>
       </footer>
-      {isLoginOpen && <LoginModal onClose={() => setIsLoginOpen(false)} />}
+      {isLoginOpen && <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />}
     </div>
   )
 }

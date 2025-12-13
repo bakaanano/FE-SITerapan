@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../styles/Catalog.css'
+import LoginModal from '../components/LoginModal'
 
 export default function Catalog() {
   const navigate = useNavigate()
@@ -161,6 +162,7 @@ export default function Catalog() {
           </div>
         </div>
       </footer>
+      {isLoginOpen && <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />}
     </div>
   )
 }
