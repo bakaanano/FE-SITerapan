@@ -1,0 +1,65 @@
+{
+  "bot_name": "PutakaBot",
+  "dataset": [
+    {
+      "keywords": ["layanan", "perpustakaan", "informasi"],
+      "question": "Apa saja layanan yang tersedia di perpustakaan?"
+    },
+    {
+      "keywords": ["daftar", "pendaftaran", "anggota"],
+      "question": "Bagaimana cara daftar anggota perpustakaan?"
+    },
+    {
+      "keywords": ["gratis", "biaya", "bayar daftar"],
+      "question": "Apakah pendaftaran anggota perpustakaan gratis?"
+    },
+    {
+      "keywords": ["lupa nomor", "nomor anggota", "id anggota"],
+      "question": "Saya lupa nomor anggota, apa yang harus saya lakukan?"
+    },
+    {
+      "keywords": ["pinjam buku", "peminjaman", "durasi"],
+      "question": "Berapa lama durasi peminjaman buku?"
+    },
+    {
+      "keywords": ["maksimal buku", "berapa buku", "jumlah buku"],
+      "question": "Berapa buku maksimal yang bisa dipinjam?"
+    },
+    {
+      "keywords": ["pinjam online", "pinjam lewat website"],
+      "question": "Bagaimana cara pinjam buku online lewat website?"
+    },
+    {
+      "keywords": ["kembalikan", "pengembalian buku"],
+      "question": "Bagaimana cara pengembalian buku?"
+    },
+    {
+      "keywords": ["perpanjang", "renew", "perpanjangan"],
+      "question": "Bagaimana cara perpanjangan peminjaman buku?"
+    },
+    {
+      "keywords": ["denda", "telat", "keterlambatan"],
+      "question": "Berapa denda jika telat mengembalikan buku?"
+    },
+    {
+      "keywords": ["bayar denda", "pembayaran denda"],
+      "question": "Bagaimana cara bayar denda perpustakaan?"
+    },
+    {
+      "keywords": ["ebook", "buku digital"],
+      "question": "Apakah perpustakaan menyediakan ebook?"
+    },
+    {
+      "keywords": ["baca ebook", "akses ebook"],
+      "question": "Bagaimana cara akses ebook perpustakaan?"
+    },
+    {
+      "keywords": ["login", "tidak bisa masuk", "gagal login"],
+      "question": "Saya tidak bisa login ke akun perpustakaan"
+    },
+    {
+      "keywords": ["kontak", "hubungi", "cs"],
+      "question": "Bagaimana cara menghubungi customer service perpustakaan?"
+    }
+  ]
+}

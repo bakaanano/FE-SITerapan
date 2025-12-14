@@ -496,7 +496,7 @@ body {
 }
 
 .chat-button {
-  position: absolute;
+  position: fixed;
   bottom: 20px;
   right: 20px;
   width: 56px;
@@ -511,7 +511,7 @@ body {
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 86, 255, 0.3);
   transition: all 0.3s ease;
-  z-index: 10;
+  z-index: 99;
 }
 
 .chat-button:hover {
