@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
 import LoginModal from './components/LoginModal'
@@ -9,6 +9,29 @@ import About from './pages/About'
 function AppContent() {
   const [searchQuery, setSearchQuery] = useState('')
   const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const [catalogBooks, setCatalogBooks] = useState([])
+  const [loadingCatalog, setLoadingCatalog] = useState(true)
+
+  // Fetch top 5 books dari API
+  useEffect(() => {
+    const fetchCatalogBooks = async () => {
+      try {
+        setLoadingCatalog(true)
+        const response = await fetch('http://localhost:3000/api/catalog')
+        if (!response.ok) throw new Error('Gagal mengambil data')
+        const data = await response.json()
+        const topBooks = (data.data || [])
+          .sort((a, b) => a.buku_id - b.buku_id)
+          .slice(0, 5)
+        setCatalogBooks(topBooks)
+      } catch (err) {
+        console.error('Error fetching catalog books:', err)
+      } finally {
+        setLoadingCatalog(false)
+      }
+    }
+    fetchCatalogBooks()
+  }, [])
 
   const handleSearch = () => {
     console.log('Search for:', searchQuery)
@@ -169,18 +192,23 @@ function AppContent() {
         <div className="katalog-container">
           <h2 className="katalog-title">Katalog Buku</h2>
           <div className="katalog-grid">
-            {[1, 2, 3, 4, 5].map((item) => (
-              <div key={item} className="katalog-card">
-                <div className="katalog-image">
-                  <img src="/book-placeholder.jpg" alt="Lost at Sea" />
+            {loadingCatalog ? (
+              <p style={{ textAlign: 'center', padding: '2rem', gridColumn: '1 / -1' }}>Memuat data...</p>
+            ) : catalogBooks.length === 0 ? (
+              <p style={{ textAlign: 'center', padding: '2rem', gridColumn: '1 / -1' }}>Tidak ada buku</p>
+            ) : (
+              catalogBooks.map((book) => (
+                <div key={book.buku_id} className="katalog-card">
+                  <div className="katalog-image">
+                    <img src="/book-placeholder.jpg" alt={book.Judul} />
+                  </div>
+                  <div className="katalog-info">
+                    <h3 className="katalog-book-title">{book.Judul}</h3>
+                    <p className="katalog-author">{book.Penulis}</p>
+                  </div>
                 </div>
-                <div className="katalog-info">
-                  <h3 className="katalog-book-title">Judul Buku I</h3>
-                  <p className="katalog-author">Penulis</p>
-                  <button className="katalog-btn">Lihat Detail</button>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </section>

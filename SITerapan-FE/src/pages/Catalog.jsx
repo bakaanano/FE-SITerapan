@@ -1,33 +1,63 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../styles/Catalog.css'
 import LoginModal from '../components/LoginModal'
 
 export default function Catalog() {
   const navigate = useNavigate()
+  const [books, setBooks] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedFilter, setSelectedFilter] = useState('semua')
   const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [selectedBook, setSelectedBook] = useState(null)
+  const [isDetailOpen, setIsDetailOpen] = useState(false)
 
-  // Sample data buku
-  const books = [
-    { id: 1, title: 'Judul Buku I', author: 'Penulis', category: 'semua' },
-    { id: 2, title: 'Judul Buku I', author: 'Penulis', category: 'fiksi' },
-    { id: 3, title: 'Judul Buku I', author: 'Penulis', category: 'sejarah' },
-    { id: 4, title: 'Judul Buku I', author: 'Penulis', category: 'ilmiah' },
-    { id: 5, title: 'Judul Buku I', author: 'Penulis', category: 'fiksi' },
-    { id: 6, title: 'Judul Buku I', author: 'Penulis', category: 'sejarah' },
-    { id: 7, title: 'Judul Buku I', author: 'Penulis', category: 'semua' },
-    { id: 8, title: 'Judul Buku I', author: 'Penulis', category: 'ilmiah' },
-  ]
+  // Fetch data dari API backend
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch('http://localhost:3000/api/catalog')
+        if (!response.ok) throw new Error('Gagal mengambil data')
+        const data = await response.json()
+        // Sort berdasarkan buku_id
+        const sortedBooks = (data.data || []).sort((a, b) => a.buku_id - b.buku_id)
+        console.log('Data dari API:', data)
+        console.log('Sorted Books:', sortedBooks)
+        setBooks(sortedBooks)
+        setError(null)
+      } catch (err) {
+        setError(err.message)
+        console.error('Error fetching books:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchBooks()
+  }, [])
 
-  const filteredBooks = selectedFilter === 'semua' 
-    ? books 
-    : books.filter(book => book.category === selectedFilter)
+  // Filter berdasarkan kategori dan search, lalu sort by buku_id
+  const filteredBooks = books
+    .filter(book => {
+      const matchesCategory = selectedFilter === 'semua' || book.Kategori?.toLowerCase().includes(selectedFilter.toLowerCase())
+      const matchesSearch = searchQuery === '' || 
+        book.Judul?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        book.Penulis?.toLowerCase().includes(searchQuery.toLowerCase())
+      return matchesCategory && matchesSearch
+    })
+    .sort((a, b) => a.buku_id - b.buku_id)
 
   const handleSearch = (e) => {
     e.preventDefault()
     console.log('Searching for:', searchQuery)
+  }
+
+  const handleDetailClick = (book) => {
+    console.log('Book yang dipilih:', book)
+    setSelectedBook(book)
+    setIsDetailOpen(true)
   }
 
   return (
@@ -93,25 +123,28 @@ export default function Catalog() {
               Sejarah
             </button>
             <button
-              className={`filter-btn ${selectedFilter === 'ilmiah' ? 'active' : ''}`}
-              onClick={() => setSelectedFilter('ilmiah')}
+              className={`filter-btn ${selectedFilter === 'remaja' ? 'active' : ''}`}
+              onClick={() => setSelectedFilter('remaja')}
             >
-              Ilmiah
+              Remaja
             </button>
           </div>
         </div>
 
         {/* Books Grid */}
         <div className="catalog-grid">
+          {loading && <p style={{ textAlign: 'center', padding: '2rem' }}>Memuat data...</p>}
+          {error && <p style={{ textAlign: 'center', padding: '2rem', color: '#d32f2f' }}>Error: {error}</p>}
+          {!loading && !error && filteredBooks.length === 0 && <p style={{ textAlign: 'center', padding: '2rem' }}>Tidak ada buku yang ditemukan</p>}
           {filteredBooks.map(book => (
-            <div key={book.id} className="catalog-card">
+            <div key={book.buku_id} className="catalog-card">
               <div className="catalog-book-image">
-                <img src="/book-placeholder.jpg" alt={book.title} />
+                <img src="/book-placeholder.jpg" alt={book.Judul} />
               </div>
               <div className="catalog-book-info">
-                <h3 className="catalog-book-title">{book.title}</h3>
-                <p className="catalog-book-author">{book.author}</p>
-                <button className="catalog-detail-btn">Lihat Detail</button>
+                <h3 className="catalog-book-title">{book.Judul}</h3>
+                <p className="catalog-book-author">{book.Penulis}</p>
+                <button className="catalog-detail-btn" onClick={() => handleDetailClick(book)}>Lihat Detail</button>
               </div>
             </div>
           ))}
@@ -163,6 +196,53 @@ export default function Catalog() {
         </div>
       </footer>
       {isLoginOpen && <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />}
+      
+      {/* Detail Modal */}
+      {isDetailOpen && selectedBook && (
+        <>
+          {console.log('Selected Book di Modal:', selectedBook)}
+          <div className="detail-modal-overlay" onClick={() => setIsDetailOpen(false)}>
+            <div className="detail-modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="detail-modal-close" onClick={() => setIsDetailOpen(false)}>×</button>
+              <div className="detail-modal-body">
+                <div className="detail-image">
+                  <img src="/book-placeholder.jpg" alt={selectedBook.judul} />
+                </div>
+                <div className="detail-info">
+                  {console.log('Debug - Penulis:', selectedBook.Penulis)}
+                  {console.log('Debug - Jenis:', selectedBook.Jenis)}
+                  {console.log('Debug - Kategori:', selectedBook.Kategori)}
+                  {console.log('Debug - Sinopsis:', selectedBook.Sinopsis)}
+                  {console.log('Debug - Tags:', selectedBook.Tags)}
+                  {console.log('Debug - Stok:', selectedBook.Stok)}
+                  <h2 className="detail-title">{selectedBook.Judul || 'No Title'}</h2>
+                  <p className="detail-author"><strong>Penulis:</strong> {String(selectedBook.Penulis || '-').trim()}</p>
+                  <p className="detail-jenis"><strong>Jenis:</strong> {String(selectedBook.Jenis || '-').trim()}</p>
+                  <p className="detail-category"><strong>Kategori:</strong> {String(selectedBook.Kategori || '-').trim()}</p>
+                  <div className="detail-synopsis">
+                    <strong>Sinopsis:</strong>
+                    <p className="detail-synopsis-text">{String(selectedBook.Sinopsis || '-').trim()}</p>
+                  </div>
+                  <div className="detail-tags">
+                    <strong>Tags:</strong>
+                    <div className="tags-list">
+                      {selectedBook.Tags && String(selectedBook.Tags).trim() ? (
+                        String(selectedBook.Tags).split(',').map((tag, idx) => (
+                          <span key={idx} className="tag">{String(tag).trim()}</span>
+                        ))
+                      ) : (
+                        <span className="tag">Tidak ada tags</span>
+                      )}
+                    </div>
+                  </div>
+                  <p className="detail-stok"><strong>Stok:</strong> {Number(selectedBook.Stok) > 0 ? `${selectedBook.Stok} tersedia` : 'Tidak tersedia'}</p>
+                  <button className="detail-close-btn" onClick={() => setIsDetailOpen(false)}>Tutup</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
