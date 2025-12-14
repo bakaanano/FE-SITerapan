@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../styles/Catalog.css'
+import { AuthContext } from '../context/AuthContext'
+import Header from '../components/Header'
 import LoginModal from '../components/LoginModal'
 
 export default function Catalog() {
   const navigate = useNavigate()
+  const { isLoginOpen, setIsLoginOpen, handleLoginSuccess } = useContext(AuthContext)
   const [books, setBooks] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedFilter, setSelectedFilter] = useState('semua')
-  const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selectedBook, setSelectedBook] = useState(null)
@@ -63,17 +65,7 @@ export default function Catalog() {
   return (
     <div className="catalog-page">
       {/* Header */}
-      <header className="header">
-        <div className="header-container">
-          <button className="logo" onClick={() => navigate('/')}>Logo</button>
-          <nav className="nav-menu">
-            <button className="nav-link" onClick={() => navigate('/')} style={{ background: 'none', border: '2px solid #e0e0e0', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', textDecoration: 'none', color: '#333333', fontSize: '1rem', transition: 'all 0.3s ease' }} onMouseEnter={(e) => { e.target.style.borderColor = '#0056ff'; e.target.style.color = '#0056ff'; }} onMouseLeave={(e) => { e.target.style.borderColor = '#e0e0e0'; e.target.style.color = '#333333'; }}>Beranda</button>
-            <a href="/catalog" className="nav-link active">Katalog</a>
-            <a href="/about" className="nav-link">Tentang</a>
-          </nav>
-          <button className="login-btn" onClick={() => setIsLoginOpen(true)}>Masuk</button>
-        </div>
-      </header>
+      <Header />
 
       {/* Catalog Content */}
       <div className="catalog-container">
@@ -195,7 +187,13 @@ export default function Catalog() {
           </div>
         </div>
       </footer>
-      {isLoginOpen && <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />}
+      {isLoginOpen && (
+        <LoginModal 
+          isOpen={isLoginOpen} 
+          onClose={() => setIsLoginOpen(false)}
+          onLoginSuccess={handleLoginSuccess}
+        />
+      )}
       
       {/* Detail Modal */}
       {isDetailOpen && selectedBook && (

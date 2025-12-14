@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../styles/About.css'
+import { AuthContext } from '../context/AuthContext'
+import Header from '../components/Header'
 import LoginModal from '../components/LoginModal'
 
 // Import semua gambar dari folder assets/about
@@ -13,7 +15,7 @@ const imageMap = Object.keys(images).reduce((acc, path) => {
 
 export default function About() {
   const navigate = useNavigate()
-  const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const { isLoginOpen, setIsLoginOpen, handleLoginSuccess } = useContext(AuthContext)
 
   const teamMembers = [
     {
@@ -24,9 +26,9 @@ export default function About() {
     },
     {
       id: 2,
-      name: 'Taufiq',
+      name: 'Aldi',
       role: 'Frontend Developer',
-      image: imageMap['taufiq.JPG']
+      image: imageMap['aldi.jpg']
     },
     {
       id: 3,
@@ -46,41 +48,7 @@ export default function About() {
     <div className="about-page">
       
       {/* Header */}
-      <header className="header">
-        <div className="header-container">
-          <button className="logo" onClick={() => navigate('/')}>Logo</button>
-          <nav className="nav-menu">
-            <button 
-              className="nav-link" 
-              onClick={() => navigate('/')}
-              style={{ 
-                background: 'none', 
-                border: '2px solid #e0e0e0', 
-                padding: '0.5rem 1rem', 
-                borderRadius: '6px', 
-                cursor: 'pointer', 
-                textDecoration: 'none', 
-                color: '#333333', 
-                fontSize: '1rem', 
-                transition: 'all 0.3s ease' 
-              }}
-              onMouseEnter={(e) => { 
-                e.target.style.borderColor = '#0056ff'; 
-                e.target.style.color = '#0056ff'; 
-              }}
-              onMouseLeave={(e) => { 
-                e.target.style.borderColor = '#e0e0e0'; 
-                e.target.style.color = '#333333'; 
-              }}
-            >
-              Beranda
-            </button>
-            <a href="/catalog" className="nav-link">Katalog</a>
-            <a href="#about" className="nav-link active">Tentang</a>
-          </nav>
-          <button className="login-btn" onClick={() => setIsLoginOpen(true)}>Masuk</button>
-        </div>
-      </header>
+      <Header />
 
       {/* About Content */}
       <div className="about-container">
@@ -170,7 +138,13 @@ export default function About() {
           </div>
         </div>
       </footer>
-      {isLoginOpen && <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />}
+      {isLoginOpen && (
+        <LoginModal 
+          isOpen={isLoginOpen} 
+          onClose={() => setIsLoginOpen(false)}
+          onLoginSuccess={handleLoginSuccess}
+        />
+      )}
     </div>
   )
 }

@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
+import { AuthProvider, AuthContext } from './context/AuthContext'
+import Header from './components/Header'
 import LoginModal from './components/LoginModal'
 import Register from './pages/Register'
 import Catalog from './pages/Catalog'
@@ -8,9 +10,9 @@ import About from './pages/About'
 
 function AppContent() {
   const [searchQuery, setSearchQuery] = useState('')
-  const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [catalogBooks, setCatalogBooks] = useState([])
   const [loadingCatalog, setLoadingCatalog] = useState(true)
+  const { user, isLoginOpen, setIsLoginOpen, isProfileOpen, setIsProfileOpen, handleLoginSuccess, handleLogout } = useContext(AuthContext)
 
   // Fetch top 5 books dari API
   useEffect(() => {
@@ -46,17 +48,7 @@ function AppContent() {
   return (
     <>
       {/* Header */}
-      <header className="header">
-        <div className="header-container">
-          <a href="/" className="logo" style={{ textDecoration: 'none', color: '#0056ff', cursor: 'pointer' }}>Logo</a>
-          <nav className="nav-menu">
-            <a href="/" className="nav-link">Beranda</a>
-            <a href="/catalog" className="nav-link">Katalog</a>
-            <a href="/about" className="nav-link">Tentang</a>
-          </nav>
-          <button className="login-btn" onClick={() => setIsLoginOpen(true)}>Masuk</button>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="hero">
@@ -259,7 +251,11 @@ function AppContent() {
       </footer>
 
       {/* Login Modal */}
-      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+      <LoginModal 
+        isOpen={isLoginOpen} 
+        onClose={() => setIsLoginOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+      />
     </>
   )
 }
@@ -267,12 +263,14 @@ function AppContent() {
 export default function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<AppContent />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/catalog" element={<Catalog />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<AppContent />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/catalog" element={<Catalog />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </AuthProvider>
     </Router>
   )
 }

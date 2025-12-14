@@ -85,6 +85,88 @@ body {
   color: #ffffff;
 }
 
+/* ========== PROFILE CONTAINER & DROPDOWN ========== */
+.profile-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.profile-btn {
+  background-color: transparent;
+  border: 2px solid #0056ff;
+  color: #0056ff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-btn:hover {
+  background-color: #0056ff;
+  color: #ffffff;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  z-index: 1001;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile-dropdown-header {
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.profile-name {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  word-break: break-word;
+}
+
+.profile-logout-btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: transparent;
+  border: none;
+  color: #d32f2f;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.profile-logout-btn:hover {
+  background-color: #fee;
+}
+
 /* ========== HERO SECTION ========== */
 .hero {
   background: linear-gradient(135deg, #1a1f3a 0%, #0f1629 100%);
@@ -1111,6 +1193,19 @@ body {
 
   .footer-copyright {
     font-size: 0.8rem;
+  }
+
+  .profile-dropdown {
+    min-width: 150px;
+  }
+
+  .profile-dropdown-header {
+    padding: 0.75rem;
+  }
+
+  .profile-logout-btn {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
   }
 }
 

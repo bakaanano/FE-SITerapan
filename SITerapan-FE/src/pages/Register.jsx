@@ -5,16 +5,18 @@ import '../styles/Register.css'
 export default function Register() {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
-    namaLengkap: '',
+    nama_lengkap: '',
     email: '',
     telepon: '',
     alamat: '',
     password: '',
-    konfirmasiPassword: ''
+    konfirmasi_password: ''
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showKonfirmasiPassword, setShowKonfirmasiPassword] = useState(false)
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState('')
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -25,16 +27,18 @@ export default function Register() {
     setError('')
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setError('')
+    setSuccess('')
     
     // Validasi form
-    if (!formData.namaLengkap || !formData.email || !formData.telepon || !formData.alamat || !formData.password || !formData.konfirmasiPassword) {
+    if (!formData.nama_lengkap || !formData.email || !formData.telepon || !formData.alamat || !formData.password || !formData.konfirmasi_password) {
       setError('Semua field harus diisi')
       return
     }
 
-    if (formData.password !== formData.konfirmasiPassword) {
+    if (formData.password !== formData.konfirmasi_password) {
       setError('Password dan konfirmasi password tidak cocok')
       return
     }
@@ -44,10 +48,42 @@ export default function Register() {
       return
     }
 
-    // Simulasi registrasi berhasil
-    console.log('Registrasi berhasil:', formData)
-    alert('Registrasi berhasil! Silakan login')
-    navigate('/')
+    // Send to API
+    try {
+      setLoading(true)
+      const response = await fetch('http://localhost:3000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          full_name: formData.nama_lengkap,
+          email: formData.email,
+          phone: formData.telepon,
+          address: formData.alamat,
+          password: formData.password,
+          confirm_password: formData.konfirmasi_password
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.message || 'Registrasi gagal')
+        return
+      }
+
+      setSuccess('Registrasi berhasil! Redirecting...')
+      console.log('Registrasi berhasil:', data)
+      setTimeout(() => {
+        navigate('/')
+      }, 2000)
+    } catch (err) {
+      setError(err.message || 'Terjadi kesalahan saat registrasi')
+      console.error('Error registrasi:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -60,6 +96,7 @@ export default function Register() {
         </div>
 
         {error && <div className="register-error">{error}</div>}
+        {success && <div className="register-success">{success}</div>}
 
         <form onSubmit={handleSubmit} className="register-form">
           {/* Nama Lengkap */}
@@ -73,10 +110,10 @@ export default function Register() {
               <input
                 type="text"
                 id="namaLengkap"
-                name="namaLengkap"
+                name="nama_lengkap"
                 placeholder="Nama"
                 className="form-input"
-                value={formData.namaLengkap}
+                value={formData.nama_lengkap}
                 onChange={handleChange}
               />
             </div>
@@ -179,10 +216,10 @@ export default function Register() {
               <input
                 type={showKonfirmasiPassword ? "text" : "password"}
                 id="konfirmasiPassword"
-                name="konfirmasiPassword"
+                name="konfirmasi_password"
                 placeholder="••••••••"
                 className="form-input"
-                value={formData.konfirmasiPassword}
+                value={formData.konfirmasi_password}
                 onChange={handleChange}
               />
               <button
@@ -195,7 +232,9 @@ export default function Register() {
             </div>
           </div>
 
-          <button type="submit" className="register-btn">Daftar Sekarang</button>
+          <button type="submit" className="register-btn" disabled={loading}>
+            {loading ? 'Mendaftar...' : 'Daftar Sekarang'}
+          </button>
         </form>
 
         <div className="register-footer">

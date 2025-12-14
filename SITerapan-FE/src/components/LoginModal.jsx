@@ -2,17 +2,62 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../styles/LoginModal.css'
 
-export default function LoginModal({ isOpen, onClose }) {
+export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Login attempt:', { email, password, rememberMe })
-    // Add login logic here
+    setError('')
+    setLoading(true)
+
+    try {
+      const response = await fetch('http://localhost:3000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.message || 'Login gagal')
+        return
+      }
+
+      // Simpan token dan data user
+      if (data.token) {
+        localStorage.setItem('authToken', data.token)
+      }
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user))
+      }
+
+      // Panggil callback untuk update state di parent
+      onLoginSuccess(data.user)
+
+      // Tutup modal
+      onClose()
+
+      // Reset form
+      setEmail('')
+      setPassword('')
+    } catch (err) {
+      setError(err.message || 'Terjadi kesalahan')
+      console.error('Login error:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleGoogleLogin = () => {
@@ -41,6 +86,13 @@ export default function LoginModal({ isOpen, onClose }) {
           {/* Title and Subtitle */}
           <h2 className="login-modal-title">Selamat Datang Kembali</h2>
           <p className="login-modal-subtitle">Masuk ke akun SmartLib Anda</p>
+
+          {/* Error Message */}
+          {error && (
+            <div className="login-modal-error">
+              {error}
+            </div>
+          )}
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="login-modal-form">
@@ -115,8 +167,12 @@ export default function LoginModal({ isOpen, onClose }) {
             </div>
 
             {/* Login Button */}
-            <button type="submit" className="login-modal-submit-btn">
-              Masuk
+            <button 
+              type="submit" 
+              className="login-modal-submit-btn"
+              disabled={loading}
+            >
+              {loading ? 'Memproses...' : 'Masuk'}
             </button>
           </form>
 
