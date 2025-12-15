@@ -2,63 +2,133 @@
   "bot_name": "PutakaBot",
   "dataset": [
     {
-      "keywords": ["layanan", "perpustakaan", "informasi"],
+      "category": "Layanan",
+      "keywords": [
+        "layanan",
+        "perpustakaan",
+        "informasi"
+      ],
       "question": "Apa saja layanan yang tersedia di perpustakaan?"
     },
     {
-      "keywords": ["daftar", "pendaftaran", "anggota"],
+      "category": "Pendaftaran",
+      "keywords": [
+        "daftar",
+        "pendaftaran",
+        "anggota"
+      ],
       "question": "Bagaimana cara daftar anggota perpustakaan?"
     },
     {
-      "keywords": ["gratis", "biaya", "bayar daftar"],
+      "category": "Biaya Pendaftaran",
+      "keywords": [
+        "gratis",
+        "biaya",
+        "bayar daftar"
+      ],
       "question": "Apakah pendaftaran anggota perpustakaan gratis?"
     },
     {
-      "keywords": ["lupa nomor", "nomor anggota", "id anggota"],
+      "category": "Masalah Anggota",
+      "keywords": [
+        "lupa nomor",
+        "nomor anggota",
+        "id anggota"
+      ],
       "question": "Saya lupa nomor anggota, apa yang harus saya lakukan?"
     },
     {
-      "keywords": ["pinjam buku", "peminjaman", "durasi"],
+      "category": "Durasi Pinjam",
+      "keywords": [
+        "pinjam buku",
+        "peminjaman",
+        "durasi"
+      ],
       "question": "Berapa lama durasi peminjaman buku?"
     },
     {
-      "keywords": ["maksimal buku", "berapa buku", "jumlah buku"],
+      "category": "Batas Pinjam",
+      "keywords": [
+        "maksimal buku",
+        "berapa buku",
+        "jumlah buku"
+      ],
       "question": "Berapa buku maksimal yang bisa dipinjam?"
     },
     {
-      "keywords": ["pinjam online", "pinjam lewat website"],
+      "category": "Pinjam Online",
+      "keywords": [
+        "pinjam online",
+        "pinjam lewat website"
+      ],
       "question": "Bagaimana cara pinjam buku online lewat website?"
     },
     {
-      "keywords": ["kembalikan", "pengembalian buku"],
+      "category": "Pengembalian",
+      "keywords": [
+        "kembalikan",
+        "pengembalian buku"
+      ],
       "question": "Bagaimana cara pengembalian buku?"
     },
     {
-      "keywords": ["perpanjang", "renew", "perpanjangan"],
+      "category": "Perpanjangan",
+      "keywords": [
+        "perpanjang",
+        "renew",
+        "perpanjangan"
+      ],
       "question": "Bagaimana cara perpanjangan peminjaman buku?"
     },
     {
-      "keywords": ["denda", "telat", "keterlambatan"],
+      "category": "Info Denda",
+      "keywords": [
+        "denda",
+        "telat",
+        "keterlambatan"
+      ],
       "question": "Berapa denda jika telat mengembalikan buku?"
     },
     {
-      "keywords": ["bayar denda", "pembayaran denda"],
+      "category": "Bayar Denda",
+      "keywords": [
+        "bayar denda",
+        "pembayaran denda"
+      ],
       "question": "Bagaimana cara bayar denda perpustakaan?"
     },
     {
-      "keywords": ["ebook", "buku digital"],
+      "category": "Info E-Book",
+      "keywords": [
+        "ebook",
+        "buku digital"
+      ],
       "question": "Apakah perpustakaan menyediakan ebook?"
     },
     {
-      "keywords": ["baca ebook", "akses ebook"],
+      "category": "Akses E-Book",
+      "keywords": [
+        "baca ebook",
+        "akses ebook"
+      ],
       "question": "Bagaimana cara akses ebook perpustakaan?"
     },
     {
-      "keywords": ["login", "tidak bisa masuk", "gagal login"],
+      "category": "Masalah Login",
+      "keywords": [
+        "login",
+        "tidak bisa masuk",
+        "gagal login"
+      ],
       "question": "Saya tidak bisa login ke akun perpustakaan"
     },
     {
-      "keywords": ["kontak", "hubungi", "cs"],
+      "category": "Kontak",
+      "keywords": [
+        "kontak",
+        "hubungi",
+        "cs"
+      ],
       "question": "Bagaimana cara menghubungi customer service perpustakaan?"
     }
   ]

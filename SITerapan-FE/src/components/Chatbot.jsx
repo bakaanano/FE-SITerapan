@@ -16,13 +16,13 @@ export default function Chatbot({ isOpen, onClose }) {
   const messagesEndRef = useRef(null)
   const chatboxRef = useRef(null)
 
-  // Extract unique categories from keywords
+  // Extract unique categories from dataset
   const getCategories = () => {
     const categories = new Set()
     questionsData.dataset.forEach((item) => {
-      item.keywords.forEach((keyword) => {
-        categories.add(keyword)
-      })
+      if (item.category) {
+        categories.add(item.category)
+      }
     })
     return Array.from(categories)
   }
@@ -30,9 +30,9 @@ export default function Chatbot({ isOpen, onClose }) {
   const categories = getCategories()
 
   // Get a random question from selected category
-  const getRandomQuestion = (categoryKeyword) => {
+  const getRandomQuestion = (categoryName) => {
     const matching = questionsData.dataset.filter((item) =>
-      item.keywords.includes(categoryKeyword)
+      item.category === categoryName
     )
     if (matching.length === 0) return null
     const random = matching[Math.floor(Math.random() * matching.length)]
@@ -57,9 +57,24 @@ export default function Chatbot({ isOpen, onClose }) {
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside)
-      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isOpen, onClose])
+
+  const handleResetAndClose = () => {
+    setMessages([
+      {
+        id: 1,
+        type: 'bot',
+        text: 'Halo! Saya adalah PustakaBot. Ada yang bisa saya bantu?',
+      },
+    ])
+    setShowCategories(true)
+    setSelectedCategory(null)
+    onClose()
+  }
 
   const handleSelectCategory = async (category) => {
     setShowCategories(false)
@@ -167,7 +182,7 @@ export default function Chatbot({ isOpen, onClose }) {
           </button>
           <button
             className="chatbot-close"
-            onClick={onClose}
+            onClick={handleResetAndClose}
             aria-label="Close chatbot"
             title="Tutup"
           >
