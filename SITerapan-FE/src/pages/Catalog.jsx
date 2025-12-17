@@ -44,7 +44,7 @@ export default function Catalog() {
   const filteredBooks = books
     .filter(book => {
       const matchesCategory = selectedFilter === 'semua' || book.Kategori?.toLowerCase().includes(selectedFilter.toLowerCase())
-      const matchesSearch = searchQuery === '' || 
+      const matchesSearch = searchQuery === '' ||
         book.Judul?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         book.Penulis?.toLowerCase().includes(searchQuery.toLowerCase())
       return matchesCategory && matchesSearch
@@ -61,6 +61,72 @@ export default function Catalog() {
     setSelectedBook(book)
     setIsDetailOpen(true)
   }
+
+  // Booking Logic
+  const [bookingLoading, setBookingLoading] = useState(false)
+
+  const handleBooking = async () => {
+    // 1. Cek Login
+    const savedUser = localStorage.getItem('user')
+    let user = savedUser ? JSON.parse(savedUser) : null
+
+    console.log('Booking Debug - Saved User:', savedUser)
+    console.log('Booking Debug - Parsed User:', user)
+
+    if (!user) {
+      alert('Silakan login terlebih dahulu untuk meminjam buku.')
+      setIsLoginOpen(true)
+      return
+    }
+
+    // 2. Get User ID
+    // Backend expects user_id. From previous logs, backend sends 'user_id'. 
+    // We check user.user_id, user.id, or user.id_user just in case.
+    let userId = user.user_id || user.id || user.userId || user._id
+
+    console.log('Booking Debug - Final User ID:', userId)
+
+    if (!userId) {
+      alert(`Gagal mengidentifikasi user. ID tidak ditemukan.\nUser: ${JSON.stringify(user)}`)
+      return
+    }
+
+    if (!selectedBook) return
+
+    // 3. Send Request
+    setBookingLoading(true)
+    try {
+      const response = await fetch('http://localhost:3000/api/booking', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          buku_id: selectedBook.buku_id,
+          tanggal_booking: new Date().toISOString().split('T')[0], // Today YYYY-MM-DD
+          status: 'pending'
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || data.error || 'Gagal melakukan booking')
+      }
+
+      alert('Berhasil! Booking buku telah dibuat.')
+      setIsDetailOpen(false)
+      // Optional: Refresh stok (fetchBooks)
+    } catch (err) {
+      console.error('Booking Error:', err)
+      alert(`Gagal booking: ${err.message}`)
+    } finally {
+      setBookingLoading(false)
+    }
+  }
+
+
 
   return (
     <div className="catalog-page">
@@ -170,12 +236,12 @@ export default function Catalog() {
               <div className="social-links">
                 <a href="#facebook" className="social-icon">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                   </svg>
                 </a>
                 <a href="#instagram" className="social-icon">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.117.6c-.779.263-1.618.68-2.228 1.289-.609.61-1.026 1.449-1.289 2.228-.267.788-.468 1.658-.528 2.936C.008 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.528 2.936.263.779.68 1.618 1.289 2.228.61.609 1.449 1.026 2.228 1.289.788.267 1.658.468 2.936.528C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.261 2.936-.528.79-.263 1.618-.68 2.228-1.289.609-.61 1.026-1.449 1.289-2.228.267-.788.468-1.658.528-2.936.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.261-2.148-.528-2.936-.263-.779-.68-1.618-1.289-2.228-.61-.609-1.449-1.026-2.228-1.289-.788-.267-1.658-.468-2.936-.528C15.667.008 15.26 0 12 0zm0 2.16c3.203 0 3.585.009 4.849.07 1.171.054 1.805.244 2.227.408.56.217 1.001.542 1.44.98.438.439.763.88.98 1.44.164.422.354 1.057.408 2.227.061 1.264.07 1.646.07 4.849s-.009 3.585-.07 4.849c-.054 1.171-.244 1.805-.408 2.227-.217.56-.542 1.001-.98 1.44-.439.438-.88.763-1.44.98-.422.164-1.057.354-2.227.408-1.264.061-1.646.07-4.849.07s-3.585-.009-4.849-.07c-1.171-.054-1.805-.244-2.227-.408-.56-.217-1.001-.542-1.44-.98-.438-.439-.763-.88-.98-1.44-.164-.422-.354-1.057-.408-2.227-.061-1.264-.07-1.646-.07-4.849s.009-3.585.07-4.849c.054-1.171.244-1.805.408-2.227.217-.56.542-1.001.98-1.44.439-.438.88-.763 1.44-.98.422-.164 1.057-.354 2.227-.408 1.264-.061 1.646-.07 4.849-.07zm0 3.678c-3.405 0-6.162 2.757-6.162 6.162 0 3.405 2.757 6.162 6.162 6.162 3.405 0 6.162-2.757 6.162-6.162 0-3.405-2.757-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.117.6c-.779.263-1.618.68-2.228 1.289-.609.61-1.026 1.449-1.289 2.228-.267.788-.468 1.658-.528 2.936C.008 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.528 2.936.263.779.68 1.618 1.289 2.228.61.609 1.449 1.026 2.228 1.289.788.267 1.658.468 2.936.528C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.261 2.936-.528.79-.263 1.618-.68 2.228-1.289.609-.61 1.026-1.449 1.289-2.228.267-.788.468-1.658.528-2.936.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.261-2.148-.528-2.936-.263-.779-.68-1.618-1.289-2.228-.61-.609-1.449-1.026-2.228-1.289-.788-.267-1.658-.468-2.936-.528C15.667.008 15.26 0 12 0zm0 2.16c3.203 0 3.585.009 4.849.07 1.171.054 1.805.244 2.227.408.56.217 1.001.542 1.44.98.438.439.763.88.98 1.44.164.422.354 1.057.408 2.227.061 1.264.07 1.646.07 4.849s-.009 3.585-.07 4.849c-.054 1.171-.244 1.805-.408 2.227-.217.56-.542 1.001-.98 1.44-.439.438-.88.763-1.44.98-.422.164-1.057.354-2.227.408-1.264.061-1.646.07-4.849.07s-3.585-.009-4.849-.07c-1.171-.054-1.805-.244-2.227-.408-.56-.217-1.001-.542-1.44-.98-.438-.439-.763-.88-.98-1.44-.164-.422-.354-1.057-.408-2.227-.061-1.264-.07-1.646-.07-4.849s.009-3.585.07-4.849c.054-1.171.244-1.805.408-2.227.217-.56.542-1.001.98-1.44.439-.438.88-.763 1.44-.98.422-.164 1.057-.354 2.227-.408 1.264-.061 1.646-.07 4.849-.07zm0 3.678c-3.405 0-6.162 2.757-6.162 6.162 0 3.405 2.757 6.162 6.162 6.162 3.405 0 6.162-2.757 6.162-6.162 0-3.405-2.757-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                   </svg>
                 </a>
               </div>
@@ -188,13 +254,13 @@ export default function Catalog() {
         </div>
       </footer>
       {isLoginOpen && (
-        <LoginModal 
-          isOpen={isLoginOpen} 
+        <LoginModal
+          isOpen={isLoginOpen}
           onClose={() => setIsLoginOpen(false)}
           onLoginSuccess={handleLoginSuccess}
         />
       )}
-      
+
       {/* Detail Modal */}
       {isDetailOpen && selectedBook && (
         <>
@@ -233,7 +299,52 @@ export default function Catalog() {
                       )}
                     </div>
                   </div>
-                  <p className="detail-stok"><strong>Stok:</strong> {Number(selectedBook.Stok) > 0 ? `${selectedBook.Stok} tersedia` : 'Tidak tersedia'}</p>
+                  <p className="detail-stok"><strong>Stok:</strong> {Number(selectedBook.stok || selectedBook.Stok) > 0 ? `${selectedBook.stok || selectedBook.Stok} tersedia` : 'Tidak tersedia'}</p>
+
+                  <button
+                    className="detail-booking-btn"
+                    onClick={handleBooking}
+                    disabled={bookingLoading || Number(selectedBook.stok || selectedBook.Stok) <= 0}
+                    style={{
+                      marginTop: '1rem',
+                      width: '100%',
+                      padding: '0.75rem',
+                      backgroundColor: Number(selectedBook.stok || selectedBook.Stok) > 0 ? '#0056ff' : '#ccc',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: Number(selectedBook.stok || selectedBook.Stok) > 0 ? 'pointer' : 'not-allowed',
+                      fontWeight: '600',
+                      fontSize: '1rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      marginBottom: '0.5rem'
+                    }}
+                  >
+                    {bookingLoading ? (
+                      <>
+                        <span className="spinner" style={{
+                          width: '16px', height: '16px', border: '2px solid white', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 1s linear infinite'
+                        }}></span>
+                        Memproses...
+                      </>
+                    ) : (
+                      <>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        {Number(selectedBook.stok || selectedBook.Stok) > 0 ? 'Pinjam Buku Ini' : 'Stok Habis'}
+                      </>
+                    )}
+                  </button>
+
+                  <style>{`
+                    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                  `}</style>
+
                   <button className="detail-close-btn" onClick={() => setIsDetailOpen(false)}>Tutup</button>
                 </div>
               </div>
