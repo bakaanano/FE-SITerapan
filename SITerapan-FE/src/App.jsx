@@ -199,7 +199,10 @@ function AppContent() {
       {/* Katalog Buku Section */}
       <section className="katalog-section">
         <div className="katalog-container">
-          <h2 className="katalog-title">Katalog Buku</h2>
+          <div className="section-header">
+            <h2 className="section-title">Katalog Buku</h2>
+            <a href="/catalog" className="lihat-semua">Lihat Semua →</a>
+          </div>
           <div className="katalog-grid">
             {loadingCatalog ? (
               <p style={{ textAlign: 'center', padding: '2rem', gridColumn: '1 / -1' }}>Memuat data...</p>

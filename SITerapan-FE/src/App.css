@@ -131,6 +131,7 @@ body {
     opacity: 0;
     transform: translateY(-8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -606,6 +607,18 @@ body {
   margin-bottom: 3rem;
 }
 
+.katalog-button {
+  color: #0056ff;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.katalog-button:hover {
+  opacity: 0.8;
+}
+
 .katalog-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -678,6 +691,8 @@ body {
   background-color: #0056ff;
   color: #ffffff;
 }
+
+
 
 /* ========== FOOTER ========== */
 .footer {
@@ -1208,4 +1223,3 @@ body {
     font-size: 0.85rem;
   }
 }
-
