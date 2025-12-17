@@ -1,8 +1,10 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useContext } from 'react'
+import { AuthContext } from '../context/AuthContext'
 import questionsData from '../utils/list_pertanyaan_FE.json'
 import '../styles/Chatbot.css'
 
 export default function Chatbot({ isOpen, onClose }) {
+  const { user, setIsLoginOpen } = useContext(AuthContext)
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -77,6 +79,21 @@ export default function Chatbot({ isOpen, onClose }) {
   }
 
   const handleSelectCategory = async (category) => {
+    // Check login first
+    if (!user) {
+      const loginMsg = {
+        id: Date.now(),
+        type: 'bot',
+        text: 'Silakan login terlebih dahulu untuk menggunakan layanan ini.',
+      }
+      setMessages((prev) => [...prev, loginMsg])
+      console.log('Chatbot User Object:', user)
+      setIsLoginOpen(true)
+      return
+    }
+
+     // Debugging untuk user
+
     setShowCategories(false)
     setSelectedCategory(category)
     setLoading(true)
@@ -108,6 +125,46 @@ export default function Chatbot({ isOpen, onClose }) {
     setMessages((prev) => [...prev, questionMessage])
 
     try {
+      // Helper function to decode JWT
+      const parseJwt = (token) => {
+        try {
+          return JSON.parse(atob(token.split('.')[1]))
+        } catch (e) {
+          return null
+        }
+      }
+
+      // Robust user ID check
+      // Prioritize: explicit ID -> phone (since backend uses it as SID) -> email
+      let userId = user.id || user.user_id || user.userId || user._id || user.phone || user.email
+
+      // Fallback: Try to get ID from token if not in user object
+      if (!userId) {
+        const token = localStorage.getItem('authToken')
+        if (token) {
+          console.log('Attempting to decode token...')
+          const decoded = parseJwt(token)
+          console.log('Decoded Token:', decoded) // Log FULL decoded token
+          if (decoded) {
+            userId = decoded.id || decoded.user_id || decoded.sub || decoded.phone || decoded.email
+            console.log('User ID retrieved from token:', userId)
+          } else {
+            console.warn('Failed to decode token or token is invalid')
+          }
+        } else {
+          console.warn('No authToken found in localStorage')
+        }
+      }
+
+      if (!userId) {
+        console.error('User ID not found in user object or token. User Object:', user)
+        throw new Error(
+          'Gagal memproses data user (ID tidak ditemukan). Silakan login ulang.'
+        )
+      }
+
+      console.log('Using User ID:', userId) // Debug log final ID used
+
       const response = await fetch('http://localhost:3000/api/chatbot/send', {
         method: 'POST',
         headers: {
@@ -115,6 +172,7 @@ export default function Chatbot({ isOpen, onClose }) {
         },
         body: JSON.stringify({
           message: question,
+          user_id: userId,
         }),
       })
 
@@ -129,6 +187,10 @@ export default function Chatbot({ isOpen, onClose }) {
       }
 
       if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          setIsLoginOpen(true)
+          throw new Error('Sesi habis atau belum login. Silakan login kembali.')
+        }
         throw new Error(data.error || 'Gagal mengirim pesan')
       }
 
