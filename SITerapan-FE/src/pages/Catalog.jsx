@@ -197,7 +197,7 @@ export default function Catalog() {
           {filteredBooks.map(book => (
             <div key={book.buku_id} className="catalog-card">
               <div className="catalog-book-image">
-                <img src="/book-placeholder.jpg" alt={book.Judul} />
+                <img src={book.cover || book.Cover || "/book-placeholder.jpg"} alt={book.Judul} />
               </div>
               <div className="catalog-book-info">
                 <h3 className="catalog-book-title">{book.Judul}</h3>
@@ -270,7 +270,7 @@ export default function Catalog() {
               <button className="detail-modal-close" onClick={() => setIsDetailOpen(false)}>×</button>
               <div className="detail-modal-body">
                 <div className="detail-image">
-                  <img src="/book-placeholder.jpg" alt={selectedBook.judul} />
+                  <img src={selectedBook.cover || selectedBook.Cover || "/book-placeholder.jpg"} alt={selectedBook.judul} />
                 </div>
                 <div className="detail-info">
                   {console.log('Debug - Penulis:', selectedBook.Penulis)}
