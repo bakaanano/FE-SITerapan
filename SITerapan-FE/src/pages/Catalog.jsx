@@ -223,9 +223,9 @@ export default function Catalog() {
             <div className="footer-section">
               <h4 className="footer-section-title">Navigasi</h4>
               <ul className="footer-links">
-                <li><Link to="/">Beranda</Link></li>
-                <li><Link to="/catalog">Katalog</Link></li>
-                <li><Link to="/about">Tentang</Link></li>
+                <li><a href="/">Beranda</a></li>
+                <li><a href="/catalog">Katalog</a></li>
+                <li><a href="/about">Tentang</a></li>
               </ul>
             </div>
             <div className="footer-section">
