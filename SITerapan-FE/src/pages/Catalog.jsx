@@ -21,7 +21,9 @@ export default function Catalog() {
     const fetchBooks = async () => {
       try {
         setLoading(true)
-        const response = await fetch('http://localhost:3000/api/catalog')
+        const response = await fetch('https://noninfectious-alonzo-unshapeable.ngrok-free.dev/api/catalog', {
+          headers: new Headers({    'ngrok-skip-browser-warning': 'true'})
+        })
         if (!response.ok) throw new Error('Gagal mengambil data')
         const data = await response.json()
         // Sort berdasarkan buku_id
@@ -96,10 +98,11 @@ export default function Catalog() {
     // 3. Send Request
     setBookingLoading(true)
     try {
-      const response = await fetch('http://localhost:3000/api/booking', {
+      const response = await fetch('https://noninfectious-alonzo-unshapeable.ngrok-free.dev/api/booking', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning':'true',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           user_id: userId,

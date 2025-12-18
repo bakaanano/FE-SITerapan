@@ -51,9 +51,10 @@ export default function Register() {
     // Send to API
     try {
       setLoading(true)
-      const response = await fetch('http://localhost:3000/api/auth/register', {
+      const response = await fetch('https://noninfectious-alonzo-unshapeable.ngrok-free.dev/api/auth/register', {
         method: 'POST',
         headers: {
+          'ngrok-skip-browser-warning':'true',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({

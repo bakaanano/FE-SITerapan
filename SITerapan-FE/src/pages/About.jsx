@@ -20,9 +20,9 @@ export default function About() {
   const teamMembers = [
     {
       id: 1,
-      name: 'Taufiq',
+      name: 'Dila',
       role: 'Project Manager',
-      image: imageMap['taufiq.JPG']
+      image: imageMap['dila.jpeg']
     },
     {
       id: 2,
