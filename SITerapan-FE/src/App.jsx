@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import './App.css'
 import { AuthProvider, AuthContext } from './context/AuthContext'
 import Header from './components/Header'
@@ -101,7 +101,7 @@ function AppContent() {
         <div className="popular-books-container">
           <div className="section-header">
             <h2 className="section-title">Buku Terpopuler</h2>
-            <a href="/catalog" className="lihat-semua">Lihat Semua →</a>
+            <Link to="/catalog" className="lihat-semua">Lihat Semua →</Link>
           </div>
 
           <div className="books-grid">
@@ -205,7 +205,7 @@ function AppContent() {
         <div className="katalog-container">
           <div className="section-header">
             <h2 className="section-title">Katalog Buku</h2>
-            <a href="/catalog" className="lihat-semua">Lihat Semua →</a>
+            <Link to="/catalog" className="lihat-semua">Lihat Semua →</Link>
           </div>
           <div className="katalog-grid">
             {loadingCatalog ? (
@@ -240,9 +240,9 @@ function AppContent() {
             <div className="footer-section">
               <h4 className="footer-section-title">Navigasi</h4>
               <ul className="footer-links">
-                <li><a href="#beranda">Beranda</a></li>
-                <li><a href="#katalog">Katalog</a></li>
-                <li><a href="#tentang">Tentang</a></li>
+                <li><Link to="/">Beranda</Link></li>
+                <li><Link to="/catalog">Katalog</Link></li>
+                <li><Link to="/about">Tentang</Link></li>
               </ul>
             </div>
             <div className="footer-section">
@@ -269,7 +269,7 @@ function AppContent() {
           </div>
           <div className="footer-divider"></div>
           <div className="footer-bottom">
-            <p className="footer-copyright">© 2025 Perpustakaan Digital (Not Open Dalam Pengerjaan)</p>
+            <p className="footer-copyright">© 2025 Perpustakaan Digital </p>
           </div>
         </div>
       </footer>

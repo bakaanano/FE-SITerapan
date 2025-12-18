@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
+import { Link } from 'react-router-dom'
 
 export default function Header() {
   const { user, isLoginOpen, setIsLoginOpen, isProfileOpen, setIsProfileOpen, handleLogout } = useContext(AuthContext)
@@ -7,11 +8,11 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header-container">
-        <a href="/" className="logo" style={{ textDecoration: 'none', color: '#0056ff', cursor: 'pointer' }}>Logo</a>
+        <Link to="/" className="logo" style={{ textDecoration: 'none', color: '#0056ff', cursor: 'pointer' }}>Logo</Link>
         <nav className="nav-menu">
-          <a href="/" className="nav-link">Beranda</a>
-          <a href="/catalog" className="nav-link">Katalog</a>
-          <a href="/about" className="nav-link">Tentang</a>
+          <Link to="/" className="nav-link">Beranda</Link>
+          <Link to="/catalog" className="nav-link">Katalog</Link>
+          <Link to="/about" className="nav-link">Tentang</Link>
         </nav>
         {user ? (
           <div className="profile-container">

@@ -223,9 +223,9 @@ export default function Catalog() {
             <div className="footer-section">
               <h4 className="footer-section-title">Navigasi</h4>
               <ul className="footer-links">
-                <li><a href="/">Beranda</a></li>
-                <li><a href="/catalog">Katalog</a></li>
-                <li><a href="/about">Tentang</a></li>
+                <li><Link to="/">Beranda</Link></li>
+                <li><Link to="/catalog">Katalog</Link></li>
+                <li><Link to="/about">Tentang</Link></li>
               </ul>
             </div>
             <div className="footer-section">
@@ -252,7 +252,7 @@ export default function Catalog() {
           </div>
           <div className="footer-divider"></div>
           <div className="footer-bottom">
-            <p className="footer-copyright">© 2025 Perpustakaan Digital (Not Open Dalam Pengerjaan)</p>
+            <p className="footer-copyright">© 2025 Perpustakaan Digital</p>
           </div>
         </div>
       </footer>
