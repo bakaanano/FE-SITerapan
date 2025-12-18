@@ -26,9 +26,10 @@ export function AuthProvider({ children }) {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/logout', {
+      const response = await fetch('https://noninfectious-alonzo-unshapeable.ngrok-free.dev/api/auth/logout', {
         method: 'POST',
         headers: {
+          'ngrok-skip-browser-warning': 'true',
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
         },

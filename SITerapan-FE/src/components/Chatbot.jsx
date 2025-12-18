@@ -14,6 +14,7 @@ export default function Chatbot({ isOpen, onClose }) {
   ])
   const [loading, setLoading] = useState(false)
   const [showCategories, setShowCategories] = useState(true)
+  // eslint-disable-next-line no-unused-vars
   const [selectedCategory, setSelectedCategory] = useState(null)
   const messagesEndRef = useRef(null)
   const chatboxRef = useRef(null)
@@ -165,10 +166,11 @@ export default function Chatbot({ isOpen, onClose }) {
 
       console.log('Using User ID:', userId) // Debug log final ID used
 
-      const response = await fetch('http://localhost:3000/api/chatbot/send', {
+      const response = await fetch('https://noninfectious-alonzo-unshapeable.ngrok-free.dev/api/chatbot/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning':'true'
         },
         body: JSON.stringify({
           message: question,
