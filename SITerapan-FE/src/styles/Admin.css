@@ -1,0 +1,149 @@
+/* Admin Dashboard Styles */
+.admin-page {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+}
+
+.admin-container {
+    flex: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 3rem 2rem;
+}
+
+.admin-header {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.admin-subtitle {
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+.admin-content {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.admin-table th {
+    font-weight: 600;
+    color: #333;
+    background-color: #f8f9fa;
+    white-space: nowrap;
+}
+
+.admin-table tr:hover {
+    background-color: #fcfcfc;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.status-pending {
+    background-color: #fff8e1;
+    color: #f57c00;
+}
+
+.status-approved,
+.status-active {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-returned,
+.status-completed {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.status-cancelled,
+.status-rejected {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.action-btn {
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    margin-right: 0.5rem;
+}
+
+.btn-approve {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.btn-approve:hover {
+    background-color: #c8e6c9;
+}
+
+.btn-return {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.btn-return:hover {
+    background-color: #bbdefb;
+}
+
+.btn-cancel {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.btn-cancel:hover {
+    background-color: #ffcdd2;
+}
+
+.loading-container,
+.error-container,
+.empty-container {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.error-container {
+    color: #d32f2f;
+}

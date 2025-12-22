@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link, useSearchParams } from 'react-router-dom' // Added useSearchParams
 import '../styles/Catalog.css'
 import { AuthContext } from '../context/AuthContext'
 import Header from '../components/Header'
@@ -7,6 +7,7 @@ import LoginModal from '../components/LoginModal'
 
 export default function Catalog() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams() // Initialize searchParams
   const { isLoginOpen, setIsLoginOpen, handleLoginSuccess } = useContext(AuthContext)
   const [books, setBooks] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
@@ -16,13 +17,19 @@ export default function Catalog() {
   const [selectedBook, setSelectedBook] = useState(null)
   const [isDetailOpen, setIsDetailOpen] = useState(false)
 
+  // Sync URL search param to state
+  useEffect(() => {
+    const query = searchParams.get('search')
+    setSearchQuery(query || '')
+  }, [searchParams])
+
   // Fetch data dari API backend
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         setLoading(true)
-        const response = await fetch('https://noninfectious-alonzo-unshapeable.ngrok-free.dev/api/catalog', {
-          headers: new Headers({    'ngrok-skip-browser-warning': 'true'})
+        const response = await fetch('https://rozanne-duplicable-bently.ngrok-free.dev/api/catalog', {
+          headers: new Headers({ 'ngrok-skip-browser-warning': 'true' })
         })
         if (!response.ok) throw new Error('Gagal mengambil data')
         const data = await response.json()
@@ -78,6 +85,7 @@ export default function Catalog() {
     if (!user) {
       alert('Silakan login terlebih dahulu untuk meminjam buku.')
       setIsLoginOpen(true)
+      setIsDetailOpen(false)
       return
     }
 
@@ -98,10 +106,10 @@ export default function Catalog() {
     // 3. Send Request
     setBookingLoading(true)
     try {
-      const response = await fetch('https://noninfectious-alonzo-unshapeable.ngrok-free.dev/api/booking', {
+      const response = await fetch('https://rozanne-duplicable-bently.ngrok-free.dev/api/booking', {
         method: 'POST',
         headers: {
-          'ngrok-skip-browser-warning':'true',
+          'ngrok-skip-browser-warning': 'true',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({

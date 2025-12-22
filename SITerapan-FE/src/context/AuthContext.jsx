@@ -26,7 +26,7 @@ export function AuthProvider({ children }) {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('https://noninfectious-alonzo-unshapeable.ngrok-free.dev/api/auth/logout', {
+      const response = await fetch('https://rozanne-duplicable-bently.ngrok-free.dev/api/auth/logout', {
         method: 'POST',
         headers: {
           'ngrok-skip-browser-warning': 'true',

@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom' // Added useNavigate
 import './App.css'
 import { AuthProvider, AuthContext } from './context/AuthContext'
 import Header from './components/Header'
@@ -9,6 +9,10 @@ import Chatbot from './components/Chatbot'
 import Register from './pages/Register'
 import Catalog from './pages/Catalog'
 import About from './pages/About'
+import Profile from './pages/Profile'
+import Admin from './pages/Admin'
+
+import BookDetailModal from './components/BookDetailModal'
 
 function AppContent() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -16,16 +20,23 @@ function AppContent() {
   const [popularBooks, setPopularBooks] = useState([])
   const [loadingCatalog, setLoadingCatalog] = useState(true)
   const [isChatbotOpen, setIsChatbotOpen] = useState(false)
+
+  // Detail & Booking State
+  const [selectedBook, setSelectedBook] = useState(null)
+  const [isDetailOpen, setIsDetailOpen] = useState(false)
+  const [bookingLoading, setBookingLoading] = useState(false)
+
   const { user, isLoginOpen, setIsLoginOpen, isProfileOpen, setIsProfileOpen, handleLoginSuccess, handleLogout } = useContext(AuthContext)
+  const navigate = useNavigate() // Initialize navigate
 
   // Fetch data
   useEffect(() => {
     const fetchCatalogBooks = async () => {
       try {
         setLoadingCatalog(true)
-        const response = await fetch('https://noninfectious-alonzo-unshapeable.ngrok-free.dev/api/catalog',{
+        const response = await fetch('https://rozanne-duplicable-bently.ngrok-free.dev/api/catalog', {
           headers: {
-            'ngrok-skip-browser-warning':'true'
+            'ngrok-skip-browser-warning': 'true'
           }
         })
         if (!response.ok) throw new Error('Gagal mengambil data')
@@ -53,8 +64,70 @@ function AppContent() {
     fetchCatalogBooks()
   }, [])
 
+  const handleDetailClick = (book) => {
+    setSelectedBook(book)
+    setIsDetailOpen(true)
+  }
+
+  const handleBooking = async () => {
+    // 1. Cek Login
+    const savedUser = localStorage.getItem('user')
+    let currentUser = savedUser ? JSON.parse(savedUser) : null
+
+    if (!currentUser) {
+      alert('Silakan login terlebih dahulu untuk meminjam buku.')
+      setIsLoginOpen(true)
+      setIsDetailOpen(false)
+      return
+    }
+
+    // 2. Get User ID
+    let userId = currentUser.user_id || currentUser.id || currentUser.userId || currentUser._id
+
+    if (!userId) {
+      alert('Gagal mengidentifikasi user. ID tidak ditemukan.')
+      return
+    }
+
+    if (!selectedBook) return
+
+    // 3. Send Request
+    setBookingLoading(true)
+    try {
+      const response = await fetch('https://rozanne-duplicable-bently.ngrok-free.dev/api/booking', {
+        method: 'POST',
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          buku_id: selectedBook.buku_id,
+          tanggal_booking: new Date().toISOString().split('T')[0],
+          status: 'pending'
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || data.error || 'Gagal melakukan booking')
+      }
+
+      alert('Berhasil! Booking buku telah dibuat.')
+      setIsDetailOpen(false)
+    } catch (err) {
+      console.error('Booking Error:', err)
+      alert(`Gagal booking: ${err.message}`)
+    } finally {
+      setBookingLoading(false)
+    }
+  }
+
   const handleSearch = () => {
-    console.log('Search for:', searchQuery)
+    if (searchQuery.trim()) {
+      navigate(`/catalog?search=${encodeURIComponent(searchQuery)}`)
+    }
   }
 
   const handleKeyPress = (e) => {
@@ -119,8 +192,27 @@ function AppContent() {
                     <h3 className="book-title">{book.Judul}</h3>
                     <p className="book-author">{book.Penulis}</p>
                     <p className="book-stock" style={{ fontSize: '0.8rem', color: '#666' }}>
-                      Sisa Stok: {book.stok !== undefined ? book.stok : book.Stok}
+                      Sisa Stok: {book.stok !== undefined ? book.stok : (book.Stok !== undefined ? book.Stok : 0)}
                     </p>
+                    <button
+                      className="detail-btn-small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDetailClick(book);
+                      }}
+                      style={{
+                        marginTop: '0.5rem',
+                        padding: '0.4rem 0.8rem',
+                        backgroundColor: '#0056ff',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem'
+                      }}
+                    >
+                      Lihat Detail
+                    </button>
                   </div>
                 </div>
               ))
@@ -221,6 +313,26 @@ function AppContent() {
                   <div className="katalog-info">
                     <h3 className="katalog-book-title">{book.Judul}</h3>
                     <p className="katalog-author">{book.Penulis}</p>
+                    <button
+                      className="detail-btn-small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDetailClick(book);
+                      }}
+                      style={{
+                        marginTop: '0.5rem',
+                        padding: '0.4rem 0.8rem',
+                        backgroundColor: '#0056ff',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem',
+                        width: '100%'
+                      }}
+                    >
+                      Lihat Detail
+                    </button>
                   </div>
                 </div>
               ))
@@ -274,6 +386,15 @@ function AppContent() {
         </div>
       </footer>
 
+      {/* BookDetailModal */}
+      <BookDetailModal
+        isOpen={isDetailOpen}
+        onClose={() => setIsDetailOpen(false)}
+        book={selectedBook}
+        onBooking={handleBooking}
+        bookingLoading={bookingLoading}
+      />
+
       {/* Login Modal */}
       <LoginModal
         isOpen={isLoginOpen}
@@ -305,6 +426,8 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/about" element={<About />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </AuthProvider>
     </Router>

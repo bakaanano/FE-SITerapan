@@ -5,6 +5,13 @@ import react from '@vitejs/plugin-react-swc'
 export default defineConfig({
   plugins: [react()],
   server: {
-    allowedHosts: ['noninfectious-alonzo-unshapeable.ngrok-free.dev']
+    allowedHosts: ['noninfectious-alonzo-unshapeable.ngrok-free.dev'],
+    proxy: {
+      '/api': {
+        target: 'https://rozanne-duplicable-bently.ngrok-free.dev',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
   }
 })

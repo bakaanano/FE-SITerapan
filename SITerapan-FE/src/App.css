@@ -233,10 +233,10 @@ body {
   opacity: 0.7;
 }
 
-.search-input {
+.hero .search-input {
   background: transparent;
   border: none;
-  color: #000000;
+  color: #ffffff;
   font-size: 1rem;
   width: 100%;
   outline: none;

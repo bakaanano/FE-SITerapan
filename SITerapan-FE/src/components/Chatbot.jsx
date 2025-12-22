@@ -93,7 +93,7 @@ export default function Chatbot({ isOpen, onClose }) {
       return
     }
 
-     // Debugging untuk user
+    // Debugging untuk user
 
     setShowCategories(false)
     setSelectedCategory(category)
@@ -166,11 +166,11 @@ export default function Chatbot({ isOpen, onClose }) {
 
       console.log('Using User ID:', userId) // Debug log final ID used
 
-      const response = await fetch('https://noninfectious-alonzo-unshapeable.ngrok-free.dev/api/chatbot/send', {
+      const response = await fetch('https://rozanne-duplicable-bently.ngrok-free.dev/api/chatbot/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning':'true'
+          'ngrok-skip-browser-warning': 'true'
         },
         body: JSON.stringify({
           message: question,

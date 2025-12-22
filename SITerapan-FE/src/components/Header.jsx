@@ -16,8 +16,8 @@ export default function Header() {
         </nav>
         {user ? (
           <div className="profile-container">
-            <button 
-              className="profile-btn" 
+            <button
+              className="profile-btn"
               onClick={() => setIsProfileOpen(!isProfileOpen)}
               title={user.full_name || user.email}
             >
@@ -31,7 +31,40 @@ export default function Header() {
                 <div className="profile-dropdown-header">
                   <p className="profile-name">{user.full_name || user.email}</p>
                 </div>
-                <button 
+                {user.role === 'admin' ? (
+                  <Link
+                    to="/admin"
+                    className="profile-menu-item"
+                    onClick={() => setIsProfileOpen(false)}
+                    style={{
+                      display: 'block',
+                      padding: '0.75rem 1rem',
+                      textDecoration: 'none',
+                      color: '#333',
+                      fontSize: '1rem',
+                      borderBottom: '1px solid #f0f0f0'
+                    }}
+                  >
+                    Admin Page
+                  </Link>
+                ) : (
+                  <Link
+                    to="/profile"
+                    className="profile-menu-item"
+                    onClick={() => setIsProfileOpen(false)}
+                    style={{
+                      display: 'block',
+                      padding: '0.75rem 1rem',
+                      textDecoration: 'none',
+                      color: '#333',
+                      fontSize: '1rem',
+                      borderBottom: '1px solid #f0f0f0'
+                    }}
+                  >
+                    Profil
+                  </Link>
+                )}
+                <button
                   className="profile-logout-btn"
                   onClick={handleLogout}
                 >

@@ -31,7 +31,7 @@ export default function Register() {
     e.preventDefault()
     setError('')
     setSuccess('')
-    
+
     // Validasi form
     if (!formData.nama_lengkap || !formData.email || !formData.telepon || !formData.alamat || !formData.password || !formData.konfirmasi_password) {
       setError('Semua field harus diisi')
@@ -51,10 +51,10 @@ export default function Register() {
     // Send to API
     try {
       setLoading(true)
-      const response = await fetch('https://noninfectious-alonzo-unshapeable.ngrok-free.dev/api/auth/register', {
+      const response = await fetch('https://rozanne-duplicable-bently.ngrok-free.dev/api/auth/register', {
         method: 'POST',
         headers: {
-          'ngrok-skip-browser-warning':'true',
+          'ngrok-skip-browser-warning': 'true',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -76,9 +76,10 @@ export default function Register() {
 
       setSuccess('Registrasi berhasil! Redirecting...')
       console.log('Registrasi berhasil:', data)
+      navigate('/')
       setTimeout(() => {
-        navigate('/')
-      }, 2000)
+        window.scrollTo(0, 0)
+      }, 0)
     } catch (err) {
       setError(err.message || 'Terjadi kesalahan saat registrasi')
       console.error('Error registrasi:', err)
