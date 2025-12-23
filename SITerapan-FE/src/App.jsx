@@ -145,7 +145,7 @@ function AppContent() {
       <section className="hero">
         <div className="hero-content">
           <h1 className="hero-title">
-            Perpustakaan <span className="hero-title-highlight">Digital</span>
+            Smart<span className="hero-title-highlight">Lib</span>
           </h1>
           <p className="hero-subtitle">Temukan buku favorit anda dengan bantuan AI Chatbot</p>
 
