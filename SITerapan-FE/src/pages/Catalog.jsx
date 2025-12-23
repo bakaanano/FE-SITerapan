@@ -225,7 +225,7 @@ export default function Catalog() {
         <div className="footer-container">
           <div className="footer-content">
             <div className="footer-section">
-              <h3 className="footer-title">Perpustakaan <span className="footer-highlight">Digital</span></h3>
+              <h3 className="footer-title">Smart<span className="footer-highlight">Lib</span></h3>
               <p className="footer-desc">Jendela dunia dalam genggaman Anda. Temukan ribuan buku digital dengan teknologi AI Chatbot untuk membantu pencarian yang lebih mudah.</p>
             </div>
             <div className="footer-section">
@@ -260,7 +260,7 @@ export default function Catalog() {
           </div>
           <div className="footer-divider"></div>
           <div className="footer-bottom">
-            <p className="footer-copyright">© 2025 Perpustakaan Digital</p>
+            <p className="footer-copyright">© 2025 SmartLib</p>
           </div>
         </div>
       </footer>
