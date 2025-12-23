@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
 import { Link } from 'react-router-dom'
+import logoSmartlib from '../assets/logo-smartlib.png'
 
 export default function Header() {
   const { user, isLoginOpen, setIsLoginOpen, isProfileOpen, setIsProfileOpen, handleLogout } = useContext(AuthContext)
@@ -8,7 +9,9 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header-container">
-        <Link to="/" className="logo" style={{ textDecoration: 'none', color: '#0056ff', cursor: 'pointer' }}>Logo</Link>
+        <Link to="/" className="logo" style={{ textDecoration: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+          <img src={logoSmartlib} alt="SmartLib Logo" style={{ height: '40px', width: 'auto' }} />
+        </Link>
         <nav className="nav-menu">
           <Link to="/" className="nav-link">Beranda</Link>
           <Link to="/catalog" className="nav-link">Katalog</Link>
