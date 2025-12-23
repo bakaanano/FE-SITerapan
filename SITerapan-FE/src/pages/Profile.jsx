@@ -10,6 +10,7 @@ export default function Profile() {
     const [bookings, setBookings] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const [actionLoading, setActionLoading] = useState(null)
 
     // Redirect if not logged in
     useEffect(() => {
@@ -75,6 +76,44 @@ export default function Profile() {
         fetchBookings()
     }, [user])
 
+    const handleCancelBooking = async (bookingId) => {
+        if (!confirm('Apakah anda yakin ingin membatalkan peminjaman ini?')) return
+
+        setActionLoading(bookingId)
+        try {
+            const userId = user.user_id || user.id || user.userId || user._id
+
+            const response = await fetch(`https://rozanne-duplicable-bently.ngrok-free.dev/api/booking/${bookingId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true'
+                },
+                body: JSON.stringify({
+                    status: 'cancelled',
+                    user_id: userId
+                })
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) throw new Error(data.message || 'Gagal membatalkan booking')
+
+            // Update local state
+            setBookings(prev => prev.map(b =>
+                b.booking_id === bookingId ? { ...b, status: 'cancelled' } : b
+            ))
+
+            alert('Booking berhasil dibatalkan')
+
+        } catch (err) {
+            console.error('Cancel booking error:', err)
+            alert(`Gagal: ${err.message}`)
+        } finally {
+            setActionLoading(null)
+        }
+    }
+
     if (!user) {
         return (
             <div className="profile-page">
@@ -93,7 +132,7 @@ export default function Profile() {
         <div className="profile-page">
             <Header />
 
-            <div className="profile-container">
+            <div className="user-profile-content">
                 {/* Profile Header */}
                 <div className="profile-header">
                     <div className="profile-avatar">
@@ -132,6 +171,7 @@ export default function Profile() {
                                     <th>Buku</th>
                                     <th>Tanggal Pinjam</th>
                                     <th>Status</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -159,6 +199,17 @@ export default function Profile() {
                                             <span className={`status-badge status-${(booking.status || 'pending').toLowerCase()}`}>
                                                 {booking.status || 'Pending'}
                                             </span>
+                                        </td>
+                                        <td>
+                                            {booking.status === 'pending' && (
+                                                <button
+                                                    className="btn-cancel-booking"
+                                                    onClick={() => handleCancelBooking(booking.booking_id)}
+                                                    disabled={actionLoading === booking.booking_id}
+                                                >
+                                                    {actionLoading === booking.booking_id ? 'Memproses...' : 'Cancel'}
+                                                </button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}

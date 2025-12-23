@@ -1,10 +1,11 @@
+/* Existing styles */
 .profile-page {
   min-height: 100vh;
   background-color: #f8f9fa;
   padding-bottom: 3rem;
 }
 
-.profile-container {
+.user-profile-content {
   max-width: 1000px;
   margin: 0 auto;
   padding: 15px;
@@ -99,21 +100,15 @@
   color: #2e7d32;
 }
 
-.status-returned {
-  background: #e0f7fa;
-  color: #006064;
-}
-
 .status-cancelled,
 .status-rejected {
   background: #ffebee;
   color: #c62828;
 }
 
-.empty-state {
-  text-align: center;
-  padding: 3rem;
-  color: #666;
+.status-returned {
+  background: #e3f2fd;
+  color: #1565c0;
 }
 
 .book-info-cell {
@@ -129,14 +124,38 @@
   border-radius: 4px;
 }
 
-@media (max-width: 768px) {
-  .profile-header {
-    flex-direction: column;
-    text-align: center;
-  }
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
 
-  .bookings-table {
-    display: block;
-    overflow-x: auto;
-  }
+/* Enhanced Cancel Button */
+.btn-cancel-booking {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(255, 77, 79, 0.2);
+}
+
+.btn-cancel-booking:hover:not(:disabled) {
+  background-color: #ff1f1f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(255, 77, 79, 0.3);
+}
+
+.btn-cancel-booking:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-cancel-booking:disabled {
+  background-color: #ffccc7;
+  cursor: not-allowed;
+  box-shadow: none;
 }

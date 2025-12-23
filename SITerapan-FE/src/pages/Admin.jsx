@@ -34,23 +34,47 @@ export default function Admin() {
                 setLoading(true)
                 // Adjust endpoint to fetch ALL bookings (assuming admin endpoint exists or generic GET /api/booking lists all)
                 // Based on user provided code `getAllBookings` -> `GET /api/booking`
-                const response = await fetch('https://rozanne-duplicable-bently.ngrok-free.dev/api/booking', {
-                    headers: new Headers({
-                        'ngrok-skip-browser-warning': 'true',
-                        // Add auth token if needed
-                        // 'Authorization': `Bearer ${localStorage.getItem('authToken')}` 
+                // AND fetch Catalog to get Covers (since getAllBookings doesn't return cover)
+                const [bookingsResponse, catalogResponse] = await Promise.all([
+                    fetch('https://rozanne-duplicable-bently.ngrok-free.dev/api/booking', {
+                        headers: new Headers({ 'ngrok-skip-browser-warning': 'true' })
+                    }),
+                    fetch('https://rozanne-duplicable-bently.ngrok-free.dev/api/catalog', {
+                        headers: new Headers({ 'ngrok-skip-browser-warning': 'true' })
                     })
+                ])
+
+                if (!bookingsResponse.ok) throw new Error('Gagal mengambil data booking')
+                // Catalog fetch is optional but needed for covers. If it fails, we just don't show covers.
+
+                const bookingsData = await bookingsResponse.json()
+                const catalogData = await catalogResponse.ok ? await catalogResponse.json() : { data: [] }
+
+                const allBookings = bookingsData.data || []
+                const allBooks = catalogData.data || []
+
+                // Create Map of Books for fast lookup
+                const booksMap = {}
+                allBooks.forEach(b => { booksMap[b.buku_id] = b })
+
+                // Merge data
+                const enrichedBookings = allBookings.map(booking => {
+                    const catalogBook = booksMap[booking.buku_id] || {}
+                    return {
+                        ...booking,
+                        buku: {
+                            ...booking.buku,
+                            // Use catalog cover if available, fallback to api response (which is missing it), then placeholder
+                            cover: catalogBook.cover || catalogBook.Cover || booking.buku?.cover || '/book-placeholder.jpg',
+                            Judul: booking.buku?.Judul || catalogBook.Judul || 'Judul ?'
+                        }
+                    }
                 })
 
-                if (!response.ok) throw new Error('Gagal mengambil data booking')
-
-                const data = await response.json()
-                const allBookings = data.data || []
-
                 // Sort descending date
-                allBookings.sort((a, b) => new Date(b.tanggal_booking) - new Date(a.tanggal_booking))
+                enrichedBookings.sort((a, b) => new Date(b.tanggal_booking) - new Date(a.tanggal_booking))
 
-                setBookings(allBookings)
+                setBookings(enrichedBookings)
             } catch (err) {
                 console.error('Error fetching admin bookings:', err)
                 setError(err.message)
