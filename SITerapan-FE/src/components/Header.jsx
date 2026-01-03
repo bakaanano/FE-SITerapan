@@ -15,6 +15,7 @@ export default function Header() {
         <nav className="nav-menu">
           <Link to="/" className="nav-link">Beranda</Link>
           <Link to="/catalog" className="nav-link">Katalog</Link>
+          <Link to="/peminjaman" className="nav-link">Peminjaman</Link>
           <Link to="/about" className="nav-link">Tentang</Link>
         </nav>
         {user ? (

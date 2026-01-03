@@ -184,10 +184,19 @@ export default function Chatbot({ isOpen, onClose }) {
         throw new Error(data.error || 'Gagal mengirim pesan')
       }
 
+      if (data.success === false) {
+        throw new Error(data.error || 'Gagal mengirim pesan')
+      }
+
       const botMessage = {
         id: Date.now() + 2,
         type: 'bot',
         text: data.bot_response,
+      }
+
+      // Update bot name if provided in response, to keep it sync
+      if (data.bot_name && data.bot_name !== botInfo.name) {
+        setBotInfo(prev => ({ ...prev, name: data.bot_name }))
       }
 
       setMessages((prev) => [...prev, botMessage])

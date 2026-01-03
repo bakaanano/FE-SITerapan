@@ -11,6 +11,7 @@ import Catalog from './pages/Catalog'
 import About from './pages/About'
 import Profile from './pages/Profile'
 import Admin from './pages/Admin'
+import Peminjaman from './pages/Peminjaman'
 
 import BookDetailModal from './components/BookDetailModal'
 
@@ -427,6 +428,7 @@ export default function App() {
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/about" element={<About />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/peminjaman" element={<Peminjaman />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
       </AuthProvider>
