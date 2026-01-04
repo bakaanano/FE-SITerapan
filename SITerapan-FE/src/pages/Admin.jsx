@@ -57,19 +57,21 @@ export default function Admin() {
                 const booksMap = {}
                 allBooks.forEach(b => { booksMap[b.buku_id] = b })
 
-                // Merge data
-                const enrichedBookings = allBookings.map(booking => {
-                    const catalogBook = booksMap[booking.buku_id] || {}
-                    return {
-                        ...booking,
-                        buku: {
-                            ...booking.buku,
-                            // Use catalog cover if available, fallback to api response (which is missing it), then placeholder
-                            cover: catalogBook.cover || catalogBook.Cover || booking.buku?.cover || '/book-placeholder.jpg',
-                            Judul: booking.buku?.Judul || catalogBook.Judul || 'Judul ?'
+                // Merge data and filter out 'draft'
+                const enrichedBookings = allBookings
+                    .filter(booking => (booking.status || '').toLowerCase() !== 'draft')
+                    .map(booking => {
+                        const catalogBook = booksMap[booking.buku_id] || {}
+                        return {
+                            ...booking,
+                            buku: {
+                                ...booking.buku,
+                                // Use catalog cover if available, fallback to api response (which is missing it), then placeholder
+                                cover: catalogBook.cover || catalogBook.Cover || booking.buku?.cover || '/book-placeholder.jpg',
+                                Judul: booking.buku?.Judul || catalogBook.Judul || 'Judul ?'
+                            }
                         }
-                    }
-                })
+                    })
 
                 // Sort descending date
                 enrichedBookings.sort((a, b) => new Date(b.tanggal_booking) - new Date(a.tanggal_booking))

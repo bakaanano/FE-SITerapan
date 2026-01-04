@@ -116,7 +116,7 @@ export default function Catalog() {
           user_id: userId,
           buku_id: selectedBook.buku_id,
           tanggal_booking: new Date().toISOString().split('T')[0], // Today YYYY-MM-DD
-          status: 'pending'
+          status: 'draft'
         })
       })
 
